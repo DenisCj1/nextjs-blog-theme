@@ -1,67 +1,71 @@
 import Link from 'next/link';
-import { getPosts } from '../utils/mdx-utils';
+import SiteShell from '../components/SiteShell';
+import AdSlot from '../components/AdSlot';
+import { tools } from '../utils/tools';
 
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import Layout, { GradientBackground } from '../components/Layout';
-import ArrowIcon from '../components/ArrowIcon';
-import { getGlobalData } from '../utils/global-data';
-import SEO from '../components/SEO';
-
-export default function Index({ posts, globalData }) {
+export default function Home() {
   return (
-    <Layout>
-      <SEO title={globalData.name} description={globalData.blogTitle} />
-      <Header name={globalData.name} />
+    <SiteShell
+      title=""
+      description="Free, fast, privacy-friendly online tools that run entirely in your browser. Compress images, convert files, count words and more — no uploads, no sign-up."
+    >
       <main className="w-full">
-        <h1 className="mb-12 text-3xl text-center lg:text-5xl">
-          {globalData.blogTitle}
-        </h1>
-        <ul className="w-full">
-          {posts.map((post) => (
-            <li
-              key={post.filePath}
-              className="transition bg-white border border-b-0 border-gray-800 md:first:rounded-t-lg md:last:rounded-b-lg backdrop-blur-lg dark:bg-black dark:bg-opacity-30 bg-opacity-10 hover:bg-opacity-20 dark:hover:bg-opacity-50 dark:border-white border-opacity-10 dark:border-opacity-10 last:border-b hover:border-b hovered-sibling:border-t-0" data-sb-object-id={`posts/${post.filePath}`}
-            >
+        <section className="py-12 text-center">
+          <h1 className="text-4xl font-bold lg:text-6xl">
+            Free Online Tools
+          </h1>
+          <p className="max-w-xl mx-auto mt-4 text-lg opacity-70">
+            Fast, private, and free. Everything runs in your browser — your
+            files never leave your device.
+          </p>
+        </section>
+
+        <AdSlot label="Top banner" />
+
+        <ul className="grid w-full gap-4 sm:grid-cols-2">
+          {tools.map((tool) => (
+            <li key={tool.slug}>
               <Link
-                as={`/posts/${post.filePath.replace(/\.mdx?$/, '')}`}
-                href={`/posts/[slug]`}
-                className="block px-6 py-6 lg:py-10 lg:px-16 focus:outline-none focus:ring-4">
-
-                {post.data.date && (
-                  <p className="mb-3 font-bold uppercase opacity-60" data-sb-field-path="date">
-                    {post.data.date}
-                  </p>
-                )}
-                <h2 className="text-2xl md:text-3xl" data-sb-field-path="title">{post.data.title}</h2>
-                {post.data.description && (
-                  <p className="mt-3 text-lg opacity-60" data-sb-field-path="description">
-                    {post.data.description}
-                  </p>
-                )}
-                <ArrowIcon className="mt-4" />
-
+                href={`/tools/${tool.slug}`}
+                className="flex flex-col h-full p-6 transition border border-gray-200 rounded-xl dark:border-gray-800 bg-white/50 dark:bg-black/30 backdrop-blur hover:border-current hover:-translate-y-1 focus:outline-none focus:ring-4"
+              >
+                <span className="text-3xl">{tool.emoji}</span>
+                <span className="mt-3 text-xl font-semibold">{tool.name}</span>
+                <span className="mt-1 text-sm opacity-60">{tool.tagline}</span>
               </Link>
             </li>
           ))}
         </ul>
+
+        <AdSlot label="Mid-page" />
+
+        <section className="py-10 text-center">
+          <h2 className="text-2xl font-semibold">Why QuickTools?</h2>
+          <div className="grid gap-6 mt-6 sm:grid-cols-3">
+            <div>
+              <p className="text-2xl">🔒</p>
+              <p className="mt-2 font-medium">100% Private</p>
+              <p className="text-sm opacity-60">
+                Files are processed locally and never uploaded.
+              </p>
+            </div>
+            <div>
+              <p className="text-2xl">⚡</p>
+              <p className="mt-2 font-medium">Instant</p>
+              <p className="text-sm opacity-60">
+                No waiting on servers — results in milliseconds.
+              </p>
+            </div>
+            <div>
+              <p className="text-2xl">🆓</p>
+              <p className="mt-2 font-medium">Free Forever</p>
+              <p className="text-sm opacity-60">
+                No sign-up, no limits, no catch.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
-      <Footer copyrightText={globalData.footerText} />
-      <GradientBackground
-        variant="large"
-        className="fixed top-20 opacity-40 dark:opacity-60"
-      />
-      <GradientBackground
-        variant="small"
-        className="absolute bottom-0 opacity-20 dark:opacity-10"
-      />
-    </Layout>
+    </SiteShell>
   );
-}
-
-export function getStaticProps() {
-  const posts = getPosts();
-  const globalData = getGlobalData();
-
-  return { props: { posts, globalData } };
 }
