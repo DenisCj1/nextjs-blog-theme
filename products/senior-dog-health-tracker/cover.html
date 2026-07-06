@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Senior Dog Health Tracker — KDP Cover</title>
+    <style>
+      /* Full-wrap KDP cover for 8.5x11", 105 pages, white paper.
+         Spine = 105 * 0.002252" = 0.2365". With 0.125" bleed all around:
+         width  = 0.125 + 8.5 + 0.2365 + 8.5 + 0.125 = 17.4865in
+         height = 11 + 0.25 = 11.25in */
+      * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      @page { size: 17.4865in 11.25in; margin: 0; }
+      body { font-family: "Helvetica Neue", Arial, sans-serif; }
+      .wrap { width: 17.4865in; height: 11.25in; display: flex; }
+      .back { width: 8.625in; height: 100%; background: linear-gradient(160deg,#3f7d78,#345f60); position: relative; }
+      .spine { width: 0.2365in; height: 100%; background: #2d565a; }
+      .front { width: 8.625in; height: 100%; background: linear-gradient(160deg,#3f7d78 0%,#35696a 100%); position: relative; }
+
+      /* Front cover — keep content inside 0.375in safe area from trim */
+      .front .inner {
+        position: absolute; inset: 0.5in 0.5in 0.5in 0.375in;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #fff;
+      }
+      .front .paw { font-size: 60px; margin-bottom: 26px; }
+      .front h1 { font-family: Georgia, serif; font-size: 58px; line-height: 1.1; margin-bottom: 20px; }
+      .front .rule { width: 90px; height: 4px; background: #d98b5f; border-radius: 2px; margin: 4px 0 26px; }
+      .front .sub { font-size: 17px; letter-spacing: 3px; text-transform: uppercase; opacity: .92; }
+      .front .foot { position: absolute; bottom: 0.55in; left: 0; right: 0; text-align: center; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: .85; }
+
+      /* Back cover */
+      .back .inner { position: absolute; inset: 0.6in 0.5in 0.6in 0.6in; color: #fff; }
+      .back h2 { font-family: Georgia, serif; font-size: 26px; margin-bottom: 14px; }
+      .back p { font-size: 13.5px; line-height: 1.6; opacity: .95; margin-bottom: 16px; max-width: 6.4in; }
+      .back ul { list-style: none; }
+      .back li { font-size: 13px; line-height: 1.9; opacity: .95; padding-left: 22px; position: relative; }
+      .back li:before { content: "🐾"; position: absolute; left: 0; font-size: 11px; }
+      .back .barcode { position: absolute; right: 0.5in; bottom: 0.5in; width: 2in; height: 1.2in; background: #fff; border-radius: 4px; opacity: .18; }
+      .back .tag { position: absolute; left: 0.6in; bottom: 0.55in; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; opacity: .7; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- BACK COVER (left) -->
+      <div class="back">
+        <div class="inner">
+          <h2>Peace of mind for your best friend</h2>
+          <p>
+            As dogs get older, the small things matter most. This easy-to-use
+            journal helps you track your senior dog's day-to-day health so you
+            can spot changes early, never miss a dose, and walk into every vet
+            visit with a clear record instead of a guess.
+          </p>
+          <p style="font-weight:700;opacity:1;margin-bottom:8px">Inside you'll find:</p>
+          <ul>
+            <li>Dog profile &amp; emergency vet contacts</li>
+            <li>Medication &amp; supplement schedule</li>
+            <li>Weekly &amp; daily health logs</li>
+            <li>Weight &amp; body-condition tracker</li>
+            <li>Vet visit records &amp; symptom diary</li>
+            <li>Feeding &amp; diet log</li>
+          </ul>
+          <div class="tag">100+ pages · 8.5" × 11"</div>
+          <div class="barcode"></div>
+        </div>
+      </div>
+
+      <!-- SPINE -->
+      <div class="spine"></div>
+
+      <!-- FRONT COVER (right) -->
+      <div class="front">
+        <div class="inner">
+          <div class="paw">🐾</div>
+          <h1>Senior Dog<br />Health Tracker</h1>
+          <div class="rule"></div>
+          <div class="sub">Daily Care · Weight · Meds · Vet Visits</div>
+        </div>
+        <div class="foot">A simple daily journal for aging dogs</div>
+      </div>
+    </div>
+  </body>
+</html>

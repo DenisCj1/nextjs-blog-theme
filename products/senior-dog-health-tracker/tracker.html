@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Senior Dog Health Tracker</title>
+    <style>
+      :root {
+        --ink: #2f3a3a;
+        --muted: #6b7d7d;
+        --teal: #3f7d78;
+        --teal-soft: #e7f1ef;
+        --sand: #f7f3ea;
+        --line: #cdd8d6;
+        --accent: #d98b5f;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--ink);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      @page { size: 8.5in 11in; margin: 0; }
+
+      .page {
+        width: 8.5in;
+        height: 11in;
+        padding: 0.7in 0.7in 0.55in;
+        page-break-after: always;
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+      }
+      .page:last-child { page-break-after: auto; }
+
+      .sans { font-family: "Helvetica Neue", Arial, sans-serif; }
+
+      /* Header */
+      .head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--teal);
+        padding-bottom: 8px;
+        margin-bottom: 18px;
+      }
+      .head h2 {
+        font-size: 22px;
+        margin: 0;
+        color: var(--teal);
+        letter-spacing: 0.2px;
+      }
+      .head .paw { font-size: 18px; color: var(--accent); }
+
+      .foot {
+        position: absolute;
+        bottom: 0.32in;
+        left: 0.7in;
+        right: 0.7in;
+        text-align: center;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 8.5px;
+        color: var(--muted);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* Tables */
+      table { width: 100%; border-collapse: collapse; }
+      th, td {
+        border: 1px solid var(--line);
+        padding: 8px 8px;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 11px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-weight: 700;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      tbody tr:nth-child(even) td { background: #fbfaf6; }
+      .tall td { height: 30px; }
+      .taller td { height: 40px; }
+
+      .field {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 11px;
+        margin: 0 0 14px;
+        color: var(--ink);
+      }
+      .field .lbl {
+        display: inline-block;
+        min-width: 130px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .line { border-bottom: 1px solid var(--line); display: inline-block; min-width: 210px; }
+
+      .two-col { display: flex; gap: 22px; }
+      .two-col > div { flex: 1; }
+
+      .note-lines div {
+        border-bottom: 1px solid var(--line);
+        height: 26px;
+      }
+
+      .box {
+        background: var(--sand);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .box h3 { margin: 0 0 8px; color: var(--teal); font-size: 13px; }
+      ul.tips { margin: 0; padding-left: 18px; }
+      ul.tips li { margin-bottom: 6px; }
+
+      .chk { font-family: "Helvetica Neue", Arial, sans-serif; }
+
+      /* Cover */
+      .cover {
+        background: linear-gradient(160deg, #3f7d78 0%, #35696a 100%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1in;
+      }
+      .cover .paws { font-size: 46px; margin-bottom: 22px; }
+      .cover h1 {
+        font-size: 46px;
+        line-height: 1.1;
+        margin: 0 0 16px;
+        letter-spacing: 0.5px;
+      }
+      .cover .sub {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 15px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.9;
+        margin-bottom: 60px;
+      }
+      .cover .belongs {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 13px;
+        letter-spacing: 1px;
+        opacity: 0.95;
+      }
+      .cover .belongs .u {
+        border-bottom: 1.5px solid rgba(255,255,255,0.6);
+        display: inline-block;
+        min-width: 220px;
+        margin-top: 10px;
+      }
+      .cover .rule { width: 70px; height: 3px; background: var(--accent); margin: 0 auto 26px; border-radius: 2px; }
+
+      .weekgrid td { height: 58px; }
+      .plot {
+        border: 1px solid var(--line);
+        background:
+          repeating-linear-gradient(to right, transparent 0, transparent 0.49in, #eef3f2 0.49in, #eef3f2 0.5in),
+          repeating-linear-gradient(to bottom, transparent 0, transparent 0.29in, #eef3f2 0.29in, #eef3f2 0.3in);
+        height: 3.4in;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. COVER -->
+    <section class="page cover">
+      <div class="paws">🐾</div>
+      <h1>Senior Dog<br />Health Tracker</h1>
+      <div class="rule"></div>
+      <div class="sub">Daily Care · Weight · Meds · Vet Visits</div>
+      <div class="belongs">
+        THIS JOURNAL IS FOR<br />
+        <span class="u"></span>
+      </div>
+    </section>
+
+    <!-- 2. HOW TO USE -->
+    <section class="page">
+      <div class="head"><h2>How to Use This Tracker</h2><span class="paw">🐾</span></div>
+      <p class="field" style="line-height:1.6">
+        Caring for an older dog means watching for small changes before they
+        become big problems. This tracker gives you one simple place to record
+        your dog's daily wellbeing, weight, medications, meals, symptoms, and
+        vet visits — so nothing slips through the cracks, and so your vet gets
+        a clear picture at every appointment.
+      </p>
+      <div class="box" style="margin-bottom:18px">
+        <h3>What's inside</h3>
+        <ul class="tips">
+          <li><b>Dog Profile & Emergency Contacts</b> — key info in one place.</li>
+          <li><b>Medication & Supplement Schedule</b> — never miss or double a dose.</li>
+          <li><b>Weekly & Daily Health Logs</b> — appetite, energy, mobility, mood.</li>
+          <li><b>Weight & Body Condition Tracker</b> — spot trends early.</li>
+          <li><b>Vet Visit Records</b> — questions, diagnoses, follow-ups.</li>
+          <li><b>Symptom Diary</b> — track anything unusual over time.</li>
+          <li><b>Feeding & Diet Log</b> — food, portions, appetite notes.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Getting started</h3>
+        <ul class="tips">
+          <li>Print the pages you need — reprint the logs as often as you like.</li>
+          <li>Keep it somewhere visible: by the food bowl or the front door.</li>
+          <li>Bring it to every vet visit — the trends you record are gold.</li>
+          <li>Tip: take a photo of completed pages as a backup.</li>
+        </ul>
+      </div>
+      <div class="foot">Senior Dog Health Tracker · Keep your best friend healthy, one day at a time</div>
+    </section>
+
+    <!-- 3. DOG PROFILE -->
+    <section class="page">
+      <div class="head"><h2>Dog Profile</h2><span class="paw">🐾</span></div>
+      <div class="two-col">
+        <div>
+          <p class="field"><span class="lbl">Name</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Breed</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Date of birth / age</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Sex &amp; neutered?</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Colour / markings</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Microchip no.</span><span class="line"></span></p>
+        </div>
+        <div>
+          <p class="field"><span class="lbl">Current weight</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Ideal weight</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Insurance / policy no.</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Allergies</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Chronic conditions</span><span class="line"></span></p>
+          <p class="field"><span class="lbl">Daily medications</span><span class="line"></span></p>
+        </div>
+      </div>
+      <h3 class="sans" style="color:var(--teal);margin:14px 0 8px;font-size:13px">Known conditions &amp; history</h3>
+      <div class="note-lines">
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <div class="foot">Dog Profile</div>
+    </section>
+
+    <!-- 4. EMERGENCY CONTACTS -->
+    <section class="page">
+      <div class="head"><h2>Vet &amp; Emergency Contacts</h2><span class="paw">🐾</span></div>
+      <table>
+        <tr><th style="width:38%">Contact</th><th>Name</th><th>Phone</th></tr>
+        <tr class="taller"><td>Primary vet clinic</td><td></td><td></td></tr>
+        <tr class="taller"><td>Emergency / out-of-hours vet</td><td></td><td></td></tr>
+        <tr class="taller"><td>Poison control</td><td></td><td></td></tr>
+        <tr class="taller"><td>Preferred pharmacy</td><td></td><td></td></tr>
+        <tr class="taller"><td>Pet sitter / walker</td><td></td><td></td></tr>
+        <tr class="taller"><td>Backup caregiver</td><td></td><td></td></tr>
+        <tr class="taller"><td>Insurance helpline</td><td></td><td></td></tr>
+      </table>
+      <div class="box" style="margin-top:20px">
+        <h3>Emergency warning signs — call the vet now</h3>
+        <ul class="tips" style="columns:2;column-gap:26px">
+          <li>Difficulty breathing</li>
+          <li>Collapse or fainting</li>
+          <li>Repeated vomiting / diarrhoea</li>
+          <li>Bloated, hard abdomen</li>
+          <li>Seizures</li>
+          <li>Won't eat or drink 24h+</li>
+          <li>Pale or blue gums</li>
+          <li>Sudden inability to stand</li>
+        </ul>
+      </div>
+      <div class="foot">Vet &amp; Emergency Contacts</div>
+    </section>
+
+    <!-- 5. MEDICATION SCHEDULE -->
+    <section class="page">
+      <div class="head"><h2>Medication &amp; Supplement Schedule</h2><span class="paw">🐾</span></div>
+      <table>
+        <tr>
+          <th>Medication / supplement</th><th style="width:14%">Dose</th>
+          <th style="width:16%">Time(s)</th><th style="width:16%">With food?</th><th style="width:16%">Refill by</th>
+        </tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <h3 class="sans" style="color:var(--teal);margin:20px 0 8px;font-size:13px">Daily dose given — tick each time</h3>
+      <table>
+        <tr><th style="width:34%">Medication</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <div class="foot">Medication &amp; Supplement Schedule</div>
+    </section>
+
+    <!-- 6. WEEKLY HEALTH LOG -->
+    <section class="page">
+      <div class="head"><h2>Weekly Health Log</h2><span class="paw">🐾</span></div>
+      <p class="field" style="margin-bottom:12px"><span class="lbl">Week of</span><span class="line"></span></p>
+      <table class="weekgrid">
+        <tr>
+          <th style="width:13%">Day</th><th>Appetite</th><th>Water</th>
+          <th>Energy</th><th>Mobility</th><th>Toilet</th><th>Mood / notes</th>
+        </tr>
+        <tr><td><b>Mon</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Tue</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Wed</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Thu</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Fri</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Sat</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><b>Sun</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <p class="field sans" style="margin-top:14px;font-size:10px;color:var(--muted)">
+        Rate each 1–5 (or use ✓ / ✗). Watch for changes from your dog's normal.
+      </p>
+      <div class="foot">Weekly Health Log</div>
+    </section>
+
+    <!-- 7. DAILY HEALTH LOG -->
+    <section class="page">
+      <div class="head"><h2>Daily Health Log</h2><span class="paw">🐾</span></div>
+      <div class="two-col" style="margin-bottom:6px">
+        <p class="field"><span class="lbl">Date</span><span class="line"></span></p>
+        <p class="field"><span class="lbl">Overall day</span> ☐ Great ☐ Okay ☐ Off</p>
+      </div>
+      <table>
+        <tr><th style="width:32%">Check</th><th>Morning</th><th>Afternoon</th><th>Evening</th></tr>
+        <tr class="tall"><td>Ate well</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Drank water</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Medication given</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Toilet (pee / poo)</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Walk / exercise</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Energy level (1–5)</td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td>Mobility / stiffness</td><td></td><td></td><td></td></tr>
+      </table>
+      <h3 class="sans" style="color:var(--teal);margin:16px 0 8px;font-size:13px">Anything unusual today?</h3>
+      <div class="note-lines"><div></div><div></div><div></div><div></div></div>
+      <div class="foot">Daily Health Log</div>
+    </section>
+
+    <!-- 8. WEIGHT TRACKER -->
+    <section class="page">
+      <div class="head"><h2>Weight &amp; Body Condition</h2><span class="paw">🐾</span></div>
+      <table style="margin-bottom:18px">
+        <tr><th>Date</th><th>Weight</th><th>Body condition (1–9)</th><th>Notes</th></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+        <tr class="tall"><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <h3 class="sans" style="color:var(--teal);margin:0 0 8px;font-size:13px">Plot the trend</h3>
+      <div class="plot"></div>
+      <p class="field sans" style="margin-top:8px;font-size:10px;color:var(--muted)">
+        Weigh at the same time of day. Sudden loss or gain is worth a vet call.
+      </p>
+      <div class="foot">Weight &amp; Body Condition</div>
+    </section>
+
+    <!-- 9. VET VISIT RECORD -->
+    <section class="page">
+      <div class="head"><h2>Vet Visit Record</h2><span class="paw">🐾</span></div>
+      <div class="two-col">
+        <p class="field"><span class="lbl">Date</span><span class="line"></span></p>
+        <p class="field"><span class="lbl">Reason for visit</span><span class="line"></span></p>
+      </div>
+      <div class="two-col">
+        <p class="field"><span class="lbl">Weight today</span><span class="line"></span></p>
+        <p class="field"><span class="lbl">Temperature</span><span class="line"></span></p>
+      </div>
+      <h3 class="sans" style="color:var(--teal);margin:8px 0 6px;font-size:13px">Questions I want to ask</h3>
+      <div class="note-lines"><div></div><div></div><div></div></div>
+      <h3 class="sans" style="color:var(--teal);margin:14px 0 6px;font-size:13px">Diagnosis &amp; vet's notes</h3>
+      <div class="note-lines"><div></div><div></div><div></div></div>
+      <h3 class="sans" style="color:var(--teal);margin:14px 0 6px;font-size:13px">Treatment / meds prescribed</h3>
+      <div class="note-lines"><div></div><div></div></div>
+      <div class="two-col" style="margin-top:14px">
+        <p class="field"><span class="lbl">Next visit</span><span class="line"></span></p>
+        <p class="field"><span class="lbl">Cost</span><span class="line"></span></p>
+      </div>
+      <div class="foot">Vet Visit Record</div>
+    </section>
+
+    <!-- 10. SYMPTOM DIARY -->
+    <section class="page">
+      <div class="head"><h2>Symptom Diary</h2><span class="paw">🐾</span></div>
+      <table>
+        <tr><th style="width:16%">Date</th><th style="width:26%">Symptom</th><th style="width:14%">Severity</th><th>What helped / notes</th></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <p class="field sans" style="margin-top:12px;font-size:10px;color:var(--muted)">
+        Severity: 1 = barely noticeable, 5 = severe. Patterns over time help your vet diagnose faster.
+      </p>
+      <div class="foot">Symptom Diary</div>
+    </section>
+
+    <!-- 11. FEEDING LOG -->
+    <section class="page">
+      <div class="head"><h2>Feeding &amp; Diet Log</h2><span class="paw">🐾</span></div>
+      <div class="two-col" style="margin-bottom:6px">
+        <p class="field"><span class="lbl">Current food</span><span class="line"></span></p>
+        <p class="field"><span class="lbl">Daily amount</span><span class="line"></span></p>
+      </div>
+      <table>
+        <tr><th style="width:16%">Date</th><th>Breakfast</th><th>Dinner</th><th>Treats / extras</th><th style="width:18%">Appetite</th></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="taller"><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <div class="foot">Feeding &amp; Diet Log</div>
+    </section>
+
+    <!-- 12. NOTES / MEMORIES -->
+    <section class="page">
+      <div class="head"><h2>Notes &amp; Happy Moments</h2><span class="paw">🐾</span></div>
+      <div class="box" style="margin-bottom:16px">
+        Caring for a senior dog is hard work and deep love. Use this page for
+        anything — questions to look up, changes you've noticed, or the little
+        happy moments worth remembering.
+      </div>
+      <div class="note-lines">
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div>
+      </div>
+      <div class="foot">Notes &amp; Happy Moments</div>
+    </section>
+  </body>
+</html>
